@@ -1,69 +1,69 @@
-/* General body styling */
+/* Grunnleggende styling for body */
 body {
-    font-family: "Yu Gothic", "Meiryo", sans-serif; /* Japanese-style font stack */
+    font-family: "Yu Gothic", "Meiryo", sans-serif; /* En font som ser bra ut og er lett å lese */
     margin: 0;
     padding: 0;
     background-color: #FAFAFA;
     color: #333;
     line-height: 1.6;
-    display: flex; /* Enable Flexbox */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    min-height: 100vh; /* Ensure it fills the full height of the viewport */
+    display: flex; /* Sentrerer innholdet på siden */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Sørger for at innholdet fyller hele skjermen */
 }
 
-/* Container styling */
+/* Wrapper for innholdet */
 .container {
     max-width: 800px;
-    width: 100%; /* Ensure it scales properly */
+    width: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 30px; /* Space between sections */
+    gap: 30px; /* Avstand mellom seksjonene */
 }
 
-/* Block styling for sections with icons */
+/* Layout for seksjoner med ikon */
 .block.has-icon {
     display: grid;
-    grid-template-columns: 80px 1fr; /* Icon column and text column */
-    align-items: start; /* Align text and icon at the top */
-    gap: 20px; /* Space between icon and text */
+    grid-template-columns: 80px 1fr; /* Plass til ikon + tekst */
+    align-items: start;
+    gap: 20px; /* Avstand mellom ikon og tekst */
 }
 
-/* Block styling for sections without icons */
+/* Layout for seksjoner uten ikon */
 .block.no-icon {
     display: grid;
-    grid-template-columns: 80px 1fr; /* Maintain alignment by reserving space */
+    grid-template-columns: 80px 1fr; /* Holder samme layout for konsistens */
     align-items: start;
     gap: 20px;
 }
 
-/* Ensure no-icon sections have consistent alignment */
+/* Fiks for å holde tekst på linje når det ikke er ikon */
 .block.no-icon::before {
     content: '';
     display: block;
-    width: 80px; /* Reserve same space as icon */
+    width: 80px; /* Reserverer plass tilsvarende et ikon */
 }
 
-/* Icon styling */
+/* Styling for ikonene */
 .icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60px; /* Icon size */
+    width: 60px;
     height: 60px;
 }
 
 .icon img {
-    width: 100%; /* Full size of the icon container */
+    width: 100%; /* Sørger for at ikonet fyller containeren */
     height: auto;
 }
 
-/* Text styling */
+/* Styling for tekstinnhold */
 .text {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Space between paragraphs */
+    gap: 10px; /* Avstand mellom avsnitt */
 }
 
 .text p {
@@ -71,7 +71,7 @@ body {
     font-size: 1rem;
 }
 
-/* Link styling */
+/* Styling for lenker */
 .text a {
     color: #275DEA;
     text-decoration: none;
@@ -81,36 +81,39 @@ body {
     text-decoration: underline;
 }
 
+
+
+/* Responsiv tilpasning for mobil */
 @media (max-width: 768px) {
     .block.has-icon, 
     .block.no-icon {
         display: flex;
         flex-direction: column;
-        align-items: flex-start; /* Juster teksten fra venstre */
+        align-items: flex-start; /* Teksten starter alltid fra venstre */
     }
 
     .icon {
-        width: 80px; /* Beholder ikonstørrelse */
+        width: 80px;
         height: 80px;
-        margin: 0 auto; /* Sentrer ikon over teksten */
+        margin: 0 auto; /* Sentrerer ikon over teksten */
     }
 
     .text {
         max-width: 90%;
-        margin-left: 20px; /* Starter teksten på et fast punkt fra venstre */
+        margin-left: 20px; /* Sikrer lik startpunkt for teksten */
     }
 
-    /* Sørg for venstrejustering av innholdet */
+    /* Sørg for venstrejustering av tekst */
     .text p, 
     .text a {
         text-align: left;
     }
 }
 
-/* Further adjustments for very small screens */
+/* Ytterligere tilpasning for veldig små skjermer */
 @media (max-width: 480px) {
     .icon {
-        width: 60px; /* Adjust icon size for smaller screens */
+        width: 60px;
         height: 60px;
     }
 
@@ -119,13 +122,13 @@ body {
     }
 }
 
-/* Canvas styling */
+/* Canvas for tegning */
 #drawingCanvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10; /* Place canvas above other content */
-    pointer-events: auto; /* Canvas is active by default */
+    z-index: 10; /* Legger canvas over alt annet */
+    pointer-events: auto; /* Aktiverer tegning på canvas */
 }
