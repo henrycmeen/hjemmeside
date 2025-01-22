@@ -8,7 +8,7 @@
 </head>
 <body>
     <main class="container">
-        <!-- Section 1 (med ikon) -->
+        <!-- Første seksjon med ikon -->
         <section class="block has-icon">
             <div class="icon">
                 <img src="icons/icon1.svg" alt="Ikon 1">
@@ -20,7 +20,7 @@
             </div>
         </section>
 
-        <!-- Section 2 (med ikon) -->
+        <!-- Andre seksjon med ikon -->
         <section class="block has-icon">
             <div class="icon">
                 <img src="icons/icon2.svg" alt="Ikon 2">
@@ -31,26 +31,33 @@
             </div>
         </section>
 
-        <!-- Section 3 (uten ikon) -->
+        <!-- Tredje seksjon uten ikon -->
         <section class="block no-icon">
             <div class="text">
-                <p>Nå om dagen jobber jeg med kule ting i Arkivverket.</p>
+                <p>Nå om dagen jobber jeg i Arkivverket.</p>
                 <p>Du får tak i meg på <a href="mailto:henry@hey.com">henry@hey.com</a>.</p>
             </div>
         </section>
 
-        <!-- Section 4 (uten ikon, GitHub) -->
+        <!-- Fjerde seksjon uten ikon -->
         <section class="block no-icon project" data-link="https://github.com/henrycmeen">
             <div class="text">
                 <p>Slepper meg mer løs på github! <span id="github-smiley">(＾-＾)ノ</span></p>
+                    <ul>
+                        <li><a href="https://example.com" class="clickable-link" target="_blank">test</a></li>
+                        <li><a href="https://example.com" class="clickable-link" target="_blank">test</a></li>
+                        <li><a href="https://example.com" class="clickable-link" target="_blank">test</a></li>
+                    </ul>
             </div>
         </section>
     </main>
 
+    <!-- Knapp for å sende tegning på e-post -->
     <div id="emailBox" style="display: none; position: fixed; bottom: 20px; right: 20px; cursor: pointer; z-index: 1000;">
         <img id="sendEmailButton" src="icons/icon3.svg" alt="Send email" width="80" height="80">
     </div>
 
+    <!-- SVG-lag for tegning -->
     <svg id="drawingSvg" style="position:absolute; top:0; left:0; width:100%; height:100%;">
         <rect width="100%" height="100%" fill="transparent" />
     </svg>
