@@ -48,13 +48,20 @@
                 <!-- Optional SVG icon -->
             </div>
             <div class="text">
-                <p>Slepper meg mer løs på github! Ring rundt meg: (＾-＾)ノ </p>
+                <p>Slepper meg mer løs på github! Ring rundt meg: <span id="github-smiley">(＾-＾)ノ</span></p>
             </div>
         </section>
     </main>
 
-    <svg id="drawingSvg" style="position:absolute; top:0; left:0; width:100%; height:100%;"></svg>
+    <div id="emailBox" style="display: none; position: fixed; bottom: 20px; right: 20px; cursor: pointer; z-index: 1000;">
+        <img id="sendEmailButton" src="icons/icon3.svg" alt="Send email" width="80" height="80">
+    </div>
+
+    <svg id="drawingSvg" style="position:absolute; top:0; left:0; width:100%; height:100%;">
+        <rect width="100%" height="100%" fill="transparent" />
+    </svg>
 
     <script src="js/script.js"></script>
+
 </body>
 </html>
