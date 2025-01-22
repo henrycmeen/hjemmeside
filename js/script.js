@@ -4,6 +4,27 @@ let isDrawing = false;
 let pathData = [];
 let currentPath;
 
+
+// Liste over forskjellige smilefjes
+const smileyIcons = [
+    "(＾-＾)ノ",
+    "(´• ω •`)",
+    "o(^▽^)o",
+    "(≧▽≦)"
+];
+
+// Hent smiley-elementet
+const smileyElement = document.getElementById('github-smiley');
+
+// Velg et tilfeldig smilefjes ved innlasting av siden
+function setRandomSmiley() {
+    const randomIndex = Math.floor(Math.random() * smileyIcons.length);
+    smileyElement.textContent = smileyIcons[randomIndex];
+}
+
+// Kjør funksjonen for å sette et tilfeldig smilefjes ved innlasting
+setRandomSmiley();
+
 // Vis e-postboksen når brukeren starter å tegne
 function showEmailBox() {
     emailBox.style.display = 'block';
@@ -53,25 +74,25 @@ function stopDrawing() {
 }
 
 // Sjekker om prosjekt er ringet rundt
-function checkSelection() {
-    const smiley = document.getElementById('github-smiley');
-    const rect = smiley.getBoundingClientRect();
+// function checkSelection() {
+//     const smiley = document.getElementById('github-smiley');
+//     const rect = smiley.getBoundingClientRect();
 
-    const smileyX = rect.left;
-    const smileyY = rect.top;
-    const smileyW = rect.width;
-    const smileyH = rect.height;
+//     const smileyX = rect.left;
+//     const smileyY = rect.top;
+//     const smileyW = rect.width;
+//     const smileyH = rect.height;
 
-    // Sjekk om noen av punktene er innenfor smiley-området
-    const inside = pathData.some(p => 
-        p.x > smileyX && p.x < smileyX + smileyW &&
-        p.y > smileyY && p.y < smileyY + smileyH
-    );
+//     // Sjekk om noen av punktene er innenfor smiley-området
+//     const inside = pathData.some(p => 
+//         p.x > smileyX && p.x < smileyX + smileyW &&
+//         p.y > smileyY && p.y < smileyY + smileyH
+//     );
 
-    if (inside) {
-        window.location.href = "https://github.com/henrycmeen";
-    }
-}
+//     if (inside) {
+//         window.location.href = "https://github.com/henrycmeen";
+//     }
+// }
 
 // Vis e-postboksen når brukeren starter å tegne
 function showEmailBox() {
