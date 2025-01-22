@@ -3,50 +3,44 @@
 // -------------------------------
 
 const svg = document.getElementById('drawingSvg');
-const emailBox = document.getElementById('emailBox');
+const menuButton = document.getElementById('menuButton');
+const menuPopup = document.getElementById('menuPopup');
+const sendEmailButton = document.getElementById('sendEmail');
+const restartDrawingButton = document.getElementById('restartDrawing');
+const toggleDrawingButton = document.getElementById('toggleDrawing');
+
 let isDrawing = false;
+let drawingEnabled = true;
 let pathData = [];
 let currentPath;
+
+// Skjul menyknappen ved start
+menuButton.style.visibility = 'hidden';
+menuButton.style.opacity = '0';
 
 // -------------------------------
 // Smiley-håndtering
 // -------------------------------
 
-// Liste med smilefjes som vises tilfeldig
-const smileyIcons = [
-    "(＾-＾)ノ",
-    "(´• ω •`)",
-    "o(^▽^)o",
-    "(≧▽≦)"
-];
-
-// Henter smiley-elementet
+const smileyIcons = ["(＾-＾)ノ", "(´• ω •`)", "o(^▽^)o", "(≧▽≦)"];
 const smileyElement = document.getElementById('github-smiley');
 
-// Velger et tilfeldig smilefjes ved lasting av siden
 function setRandomSmiley() {
     const randomIndex = Math.floor(Math.random() * smileyIcons.length);
     smileyElement.textContent = smileyIcons[randomIndex];
 }
-
-// Kjør funksjonen for å velge en smiley ved innlasting
 setRandomSmiley();
 
 // -------------------------------
 // Tegnefunksjoner
 // -------------------------------
 
-// Viser e-postknappen når tegning starter
-function showEmailBox() {
-    emailBox.style.display = 'block';
-}
-
-// Start tegning
 function startDrawing(e) {
     e.preventDefault();
+    if (!drawingEnabled) return;
+
     isDrawing = true;
     pathData = [];
-    showEmailBox();  // Viser knappen når tegning starter
 
     const { x, y } = getEventPosition(e);
     pathData.push({ x, y });
@@ -55,12 +49,13 @@ function startDrawing(e) {
     currentPath.setAttribute("fill", "none");
     currentPath.setAttribute("stroke", "#275DEA");
     currentPath.setAttribute("stroke-width", "3");
-    currentPath.setAttribute("stroke-linecap", "round");
-    currentPath.setAttribute("stroke-linejoin", "round");
     svg.appendChild(currentPath);
+
+    // Vis menyknappen når tegning starter
+    menuButton.style.visibility = 'visible';
+    menuButton.style.opacity = '1';
 }
 
-// Tegner linjer basert på bevegelse
 function draw(e) {
     if (!isDrawing) return;
     e.preventDefault();
@@ -68,42 +63,62 @@ function draw(e) {
     const { x, y } = getEventPosition(e);
     pathData.push({ x, y });
 
-    const d = pathData.map((point, index) => {
-        return index === 0 
-            ? `M${point.x},${point.y}` 
-            : `L${point.x},${point.y}`;
-    }).join(" ");
+    const d = pathData.map((point, index) =>
+        index === 0 ? `M${point.x},${point.y}` : `L${point.x},${point.y}`
+    ).join(" ");
 
     currentPath.setAttribute("d", d);
 }
 
-// Stopper tegning
 function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
 }
 
 // -------------------------------
-// Send tegning på e-post
+// Menyfunksjonalitet
 // -------------------------------
 
-// Klikkhåndtering for sendeknappen
-document.getElementById('sendEmailButton').addEventListener('click', sendDrawing);
+menuButton.addEventListener('click', () => {
+    if (menuPopup.classList.contains('active')) {
+        menuPopup.classList.remove('active');
+    } else {
+        menuPopup.classList.add('active');
+    }
+});
 
-// Konverterer tegningen til SVG og åpner e-postklienten
-function sendDrawing() {
+// Send tegning på e-post via meny
+sendEmailButton.addEventListener('click', () => {
     const svgContent = new XMLSerializer().serializeToString(svg);
     const encodedSvg = encodeURIComponent(svgContent);
-
-    // Oppretter en e-postlenke med SVG-data
     const mailtoLink = `mailto:henrycmeen@me.com?subject=Tegning&body=Se vedlagt SVG:%0A${encodedSvg}`;
-
-    // Åpner e-postklienten
     window.location.href = mailtoLink;
+    menuPopup.classList.remove('active');
+});
 
-    // Skjuler knappen etter sending
-    emailBox.style.display = 'none';
-}
+// Start tegning på nytt via meny
+restartDrawingButton.addEventListener('click', () => {
+    svg.innerHTML = '<rect width="100%" height="100%" fill="transparent" />';
+    menuPopup.classList.remove('active');
+});
+
+// Skru av/på tegning via meny
+toggleDrawingButton.addEventListener('click', () => {
+    drawingEnabled = !drawingEnabled;
+    svg.style.pointerEvents = drawingEnabled ? "auto" : "none";
+
+    toggleDrawingButton.innerHTML = drawingEnabled 
+        ? '<span class="material-icons">block</span>' 
+        : '<span class="material-icons">edit</span>';
+
+    menuPopup.classList.remove('active');
+
+    // Hvis tegning er skrudd av, skjul menyknappen
+    if (!drawingEnabled) {
+        menuButton.style.visibility = 'hidden';
+        menuButton.style.opacity = '0';
+    }
+});
 
 // -------------------------------
 // Event-håndtering for tegning
@@ -153,5 +168,5 @@ function calculateAge(birthYear, birthMonth, birthDay) {
 }
 
 // Oppdaterer alderen i HTML
-const myAge = calculateAge(1992, 11, 3); 
+const myAge = calculateAge(1992, 11, 3);
 document.getElementById('age').textContent = myAge;
