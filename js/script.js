@@ -1,11 +1,18 @@
+// -------------------------------
+// Grunnleggende oppsett
+// -------------------------------
+
 const svg = document.getElementById('drawingSvg');
 const emailBox = document.getElementById('emailBox');
 let isDrawing = false;
 let pathData = [];
 let currentPath;
 
+// -------------------------------
+// Smiley-håndtering
+// -------------------------------
 
-// Liste over forskjellige smilefjes
+// Liste med smilefjes som vises tilfeldig
 const smileyIcons = [
     "(＾-＾)ノ",
     "(´• ω •`)",
@@ -13,19 +20,23 @@ const smileyIcons = [
     "(≧▽≦)"
 ];
 
-// Hent smiley-elementet
+// Henter smiley-elementet
 const smileyElement = document.getElementById('github-smiley');
 
-// Velg et tilfeldig smilefjes ved innlasting av siden
+// Velger et tilfeldig smilefjes ved lasting av siden
 function setRandomSmiley() {
     const randomIndex = Math.floor(Math.random() * smileyIcons.length);
     smileyElement.textContent = smileyIcons[randomIndex];
 }
 
-// Kjør funksjonen for å sette et tilfeldig smilefjes ved innlasting
+// Kjør funksjonen for å velge en smiley ved innlasting
 setRandomSmiley();
 
-// Vis e-postboksen når brukeren starter å tegne
+// -------------------------------
+// Tegnefunksjoner
+// -------------------------------
+
+// Viser e-postknappen når tegning starter
 function showEmailBox() {
     emailBox.style.display = 'block';
 }
@@ -35,7 +46,7 @@ function startDrawing(e) {
     e.preventDefault();
     isDrawing = true;
     pathData = [];
-    showEmailBox();  // Vis sendeknappen ved start
+    showEmailBox();  // Viser knappen når tegning starter
 
     const { x, y } = getEventPosition(e);
     pathData.push({ x, y });
@@ -49,7 +60,7 @@ function startDrawing(e) {
     svg.appendChild(currentPath);
 }
 
-// Tegning pågår
+// Tegner linjer basert på bevegelse
 function draw(e) {
     if (!isDrawing) return;
     e.preventDefault();
@@ -70,54 +81,34 @@ function draw(e) {
 function stopDrawing() {
     if (!isDrawing) return;
     isDrawing = false;
-    checkSelection();
 }
 
-// Sjekker om prosjekt er ringet rundt
-// function checkSelection() {
-//     const smiley = document.getElementById('github-smiley');
-//     const rect = smiley.getBoundingClientRect();
+// -------------------------------
+// Send tegning på e-post
+// -------------------------------
 
-//     const smileyX = rect.left;
-//     const smileyY = rect.top;
-//     const smileyW = rect.width;
-//     const smileyH = rect.height;
-
-//     // Sjekk om noen av punktene er innenfor smiley-området
-//     const inside = pathData.some(p => 
-//         p.x > smileyX && p.x < smileyX + smileyW &&
-//         p.y > smileyY && p.y < smileyY + smileyH
-//     );
-
-//     if (inside) {
-//         window.location.href = "https://github.com/henrycmeen";
-//     }
-// }
-
-// Vis e-postboksen når brukeren starter å tegne
-function showEmailBox() {
-    document.getElementById('emailBox').style.display = 'block';
-}
-
-// Klikkhåndtering for SVG-knappen
+// Klikkhåndtering for sendeknappen
 document.getElementById('sendEmailButton').addEventListener('click', sendDrawing);
 
-// Funksjon for å sende tegningen via e-post
+// Konverterer tegningen til SVG og åpner e-postklienten
 function sendDrawing() {
     const svgContent = new XMLSerializer().serializeToString(svg);
     const encodedSvg = encodeURIComponent(svgContent);
 
-    // Lag e-postlenken
+    // Oppretter en e-postlenke med SVG-data
     const mailtoLink = `mailto:henrycmeen@me.com?subject=Tegning&body=Se vedlagt SVG:%0A${encodedSvg}`;
 
     // Åpner e-postklienten
     window.location.href = mailtoLink;
 
-    // Skjul e-postboksen etter sending
-    document.getElementById('emailBox').style.display = 'none';
+    // Skjuler knappen etter sending
+    emailBox.style.display = 'none';
 }
 
-// Håndtering av touch og mouse events
+// -------------------------------
+// Event-håndtering for tegning
+// -------------------------------
+
 svg.addEventListener('mousedown', startDrawing);
 svg.addEventListener('mousemove', draw);
 svg.addEventListener('mouseup', stopDrawing);
@@ -127,7 +118,11 @@ svg.addEventListener('touchstart', startDrawing);
 svg.addEventListener('touchmove', draw);
 svg.addEventListener('touchend', stopDrawing);
 
-// Funksjon for å hente riktig posisjon fra både mus og touch
+// -------------------------------
+// Hjelpefunksjoner
+// -------------------------------
+
+// Henter riktig posisjon for både touch og mus
 function getEventPosition(e) {
     if (e.touches) {
         return {
@@ -141,7 +136,7 @@ function getEventPosition(e) {
     };
 }
 
-// Funksjon for å beregne alder basert på fødselsdato
+// Beregner alder basert på fødselsdato
 function calculateAge(birthYear, birthMonth, birthDay) {
     const today = new Date();
     const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
@@ -157,8 +152,6 @@ function calculateAge(birthYear, birthMonth, birthDay) {
     return age;
 }
 
-// Sett din fødselsdato (år, måned, dag)
+// Oppdaterer alderen i HTML
 const myAge = calculateAge(1992, 11, 3); 
-
-// Oppdaterer HTML-elementet med ID 'age'
 document.getElementById('age').textContent = myAge;
