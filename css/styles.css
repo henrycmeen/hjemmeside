@@ -22,12 +22,27 @@ body {
     gap: 30px; /* Space between sections */
 }
 
-/* Block (section) styling */
-.block {
+/* Block styling for sections with icons */
+.block.has-icon {
     display: grid;
     grid-template-columns: 80px 1fr; /* Icon column and text column */
     align-items: start; /* Align text and icon at the top */
     gap: 20px; /* Space between icon and text */
+}
+
+/* Block styling for sections without icons */
+.block.no-icon {
+    display: grid;
+    grid-template-columns: 80px 1fr; /* Maintain alignment by reserving space */
+    align-items: start;
+    gap: 20px;
+}
+
+/* Ensure no-icon sections have consistent alignment */
+.block.no-icon::before {
+    content: '';
+    display: block;
+    width: 80px; /* Reserve same space as icon */
 }
 
 /* Icon styling */
@@ -39,7 +54,7 @@ body {
     height: 60px;
 }
 
-.icon svg {
+.icon img {
     width: 100%; /* Full size of the icon container */
     height: auto;
 }
@@ -56,6 +71,7 @@ body {
     font-size: 1rem;
 }
 
+/* Link styling */
 .text a {
     color: #275DEA;
     text-decoration: none;
@@ -65,15 +81,37 @@ body {
     text-decoration: underline;
 }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .block {
-        grid-template-columns: 60px 1fr; /* Adjust column size for smaller screens */
+@media (max-width: 768px) {
+    .block.has-icon, 
+    .block.no-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Juster teksten fra venstre */
     }
 
     .icon {
-        width: 50px;
-        height: 50px;
+        width: 80px; /* Beholder ikonstørrelse */
+        height: 80px;
+        margin: 0 auto; /* Sentrer ikon over teksten */
+    }
+
+    .text {
+        max-width: 90%;
+        margin-left: 20px; /* Starter teksten på et fast punkt fra venstre */
+    }
+
+    /* Sørg for venstrejustering av innholdet */
+    .text p, 
+    .text a {
+        text-align: left;
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .icon {
+        width: 60px; /* Adjust icon size for smaller screens */
+        height: 60px;
     }
 
     .text p {
@@ -91,4 +129,3 @@ body {
     z-index: 10; /* Place canvas above other content */
     pointer-events: auto; /* Canvas is active by default */
 }
-
