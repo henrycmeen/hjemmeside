@@ -1,6 +1,5 @@
 const canvas = document.getElementById('drawingCanvas');
 const ctx = canvas.getContext('2d');
-const sound = new Audio('click.mp3');
 
 // Tilpass canvas til skjermstørrelsen
 canvas.width = window.innerWidth;
@@ -21,7 +20,6 @@ function startDrawing(e) {
     path = [];
     ctx.beginPath();
     ctx.moveTo(e.clientX, e.clientY);
-    sound.play();
 }
 
 // Draw function
