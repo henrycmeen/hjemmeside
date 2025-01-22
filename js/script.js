@@ -1,14 +1,21 @@
 const svg = document.getElementById('drawingSvg');
+const emailBox = document.getElementById('emailBox');
 let isDrawing = false;
 let pathData = [];
 let currentPath;
+
+// Vis e-postboksen når brukeren starter å tegne
+function showEmailBox() {
+    emailBox.style.display = 'block';
+}
 
 // Start tegning
 function startDrawing(e) {
     e.preventDefault();
     isDrawing = true;
     pathData = [];
-    
+    showEmailBox();  // Vis sendeknappen ved start
+
     const { x, y } = getEventPosition(e);
     pathData.push({ x, y });
 
@@ -47,21 +54,46 @@ function stopDrawing() {
 
 // Sjekker om prosjekt er ringet rundt
 function checkSelection() {
-    const projects = document.querySelectorAll('.project');
-    projects.forEach(project => {
-        const rect = project.getBoundingClientRect();
-        const inside = pathData.some(p => 
-            p.x > rect.left && p.x < rect.right && 
-            p.y > rect.top && p.y < rect.bottom
-        );
+    const smiley = document.getElementById('github-smiley');
+    const rect = smiley.getBoundingClientRect();
 
-        if (inside) {
-            const link = project.getAttribute('data-link');
-            if (link) {
-                window.location.href = link;
-            }
-        }
-    });
+    const smileyX = rect.left;
+    const smileyY = rect.top;
+    const smileyW = rect.width;
+    const smileyH = rect.height;
+
+    // Sjekk om noen av punktene er innenfor smiley-området
+    const inside = pathData.some(p => 
+        p.x > smileyX && p.x < smileyX + smileyW &&
+        p.y > smileyY && p.y < smileyY + smileyH
+    );
+
+    if (inside) {
+        window.location.href = "https://github.com/henrycmeen";
+    }
+}
+
+// Vis e-postboksen når brukeren starter å tegne
+function showEmailBox() {
+    document.getElementById('emailBox').style.display = 'block';
+}
+
+// Klikkhåndtering for SVG-knappen
+document.getElementById('sendEmailButton').addEventListener('click', sendDrawing);
+
+// Funksjon for å sende tegningen via e-post
+function sendDrawing() {
+    const svgContent = new XMLSerializer().serializeToString(svg);
+    const encodedSvg = encodeURIComponent(svgContent);
+
+    // Lag e-postlenken
+    const mailtoLink = `mailto:henrycmeen@me.com?subject=Tegning&body=Se vedlagt SVG:%0A${encodedSvg}`;
+
+    // Åpner e-postklienten
+    window.location.href = mailtoLink;
+
+    // Skjul e-postboksen etter sending
+    document.getElementById('emailBox').style.display = 'none';
 }
 
 // Håndtering av touch og mouse events
@@ -91,10 +123,9 @@ function getEventPosition(e) {
 // Funksjon for å beregne alder basert på fødselsdato
 function calculateAge(birthYear, birthMonth, birthDay) {
     const today = new Date();
-    const birthDate = new Date(birthYear, birthMonth - 1, birthDay); // Måned er 0-indeksert i JS
+    const birthDate = new Date(birthYear, birthMonth - 1, birthDay);
     let age = today.getFullYear() - birthDate.getFullYear();
 
-    // Juster for om bursdagen har vært i år eller ikke
     const monthDifference = today.getMonth() - birthDate.getMonth();
     const dayDifference = today.getDate() - birthDate.getDate();
 
