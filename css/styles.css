@@ -1,18 +1,24 @@
-/* Grunnleggende styling for body */
+/* -------------------------------- */
+/* Grunnleggende styling for body   */
+/* -------------------------------- */
+
 body {
-    font-family: "Yu Gothic", "Meiryo", sans-serif; /* En font som ser bra ut og er lett å lese */
+    font-family: "Yu Gothic", "Meiryo", sans-serif; /* Enkel og lesbar font */
     margin: 0;
     padding: 0;
-    background-color: #FAFAFA;
+    background-color: #F8F1E9;
     color: #333;
     line-height: 1.6;
     display: flex; /* Sentrerer innholdet på siden */
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Sørger for at innholdet fyller hele skjermen */
+    min-height: 100vh; /* Fyller hele skjermen */
 }
 
-/* Wrapper for innholdet */
+/* -------------------------------- */
+/* Wrapper for innholdet             */
+/* -------------------------------- */
+
 .container {
     max-width: 800px;
     width: 100%;
@@ -22,7 +28,10 @@ body {
     gap: 30px; /* Avstand mellom seksjonene */
 }
 
-/* Layout for seksjoner med ikon */
+/* -------------------------------- */
+/* Layout for seksjoner med/uten ikon */
+/* -------------------------------- */
+
 .block.has-icon {
     display: grid;
     grid-template-columns: 80px 1fr; /* Plass til ikon + tekst */
@@ -30,7 +39,6 @@ body {
     gap: 20px; /* Avstand mellom ikon og tekst */
 }
 
-/* Layout for seksjoner uten ikon */
 .block.no-icon {
     display: grid;
     grid-template-columns: 80px 1fr; /* Holder samme layout for konsistens */
@@ -38,14 +46,17 @@ body {
     gap: 20px;
 }
 
-/* Fiks for å holde tekst på linje når det ikke er ikon */
+/* Holder tekst på linje selv om det ikke er ikon */
 .block.no-icon::before {
     content: '';
     display: block;
-    width: 80px; /* Reserverer plass tilsvarende et ikon */
+    width: 80px; /* Reserverer plass for ikon */
 }
 
-/* Styling for ikonene */
+/* -------------------------------- */
+/* Styling for ikonene               */
+/* -------------------------------- */
+
 .icon {
     display: flex;
     justify-content: center;
@@ -55,11 +66,14 @@ body {
 }
 
 .icon img {
-    width: 100%; /* Sørger for at ikonet fyller containeren */
+    width: 100%;
     height: auto;
 }
 
-/* Styling for tekstinnhold */
+/* -------------------------------- */
+/* Styling for tekstinnhold           */
+/* -------------------------------- */
+
 .text {
     display: flex;
     flex-direction: column;
@@ -81,9 +95,107 @@ body {
     text-decoration: underline;
 }
 
+/* -------------------------------- */
+/* Menyknapp og popup-styling        */
+/* -------------------------------- */
+/* Menyknapp styling */
+.menu-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1000;
+}
 
+.menu-button .material-icons {
+    color: #275DEA;
+    font-size: 32px;
+}
 
-/* Responsiv tilpasning for mobil */
+/* Infoboble som vises ved hover */
+.menu-tooltip {
+    position: fixed;
+    bottom: 30px; /* Justerer vertikalt i forhold til knappen */
+    right: 85px; /* Justerer horisontalt til venstre for knappen */
+    background: black;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    visibility: hidden;
+    white-space: nowrap; /* Unngår linjeskift */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.menu-button:hover + .menu-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Popup-meny styling */
+.menu-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    width: 200px;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 999;
+    display: none;
+}
+
+.menu-popup.active {
+    opacity: 1;
+    transform: scale(1);
+    display: block;
+}
+
+.menu-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu-popup li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-popup li:last-child {
+    border-bottom: none;
+}
+
+.menu-popup li:hover {
+    background: #f0f0f0;
+}
+
+.menu-popup .material-icons {
+    font-size: 24px;
+    color: #275DEA;
+}
+
+/* -------------------------------- */
+/* Responsiv tilpasning for mobil    */
+/* -------------------------------- */
+
 @media (max-width: 768px) {
     .block.has-icon, 
     .block.no-icon {
@@ -110,7 +222,6 @@ body {
     }
 }
 
-/* Ytterligere tilpasning for veldig små skjermer */
 @media (max-width: 480px) {
     .icon {
         width: 60px;
@@ -122,7 +233,29 @@ body {
     }
 }
 
-/* Canvas for tegning */
+/* -------------------------------- */
+/* SVG- og tegneflate styling         */
+/* -------------------------------- */
+
+#drawingSvg {
+    pointer-events: auto; /* Tillater tegning på SVG-flaten */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#drawingSvg path {
+    pointer-events: auto; /* Lar brukeren tegne på linjene */
+}
+
+/* Gjør lenker klikkbare selv med SVG */
+.clickable-link {
+    pointer-events: auto;
+}
+
+/* Tegneflate */
 #drawingCanvas {
     position: absolute;
     top: 0;
