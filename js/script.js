@@ -1,58 +1,58 @@
-const canvas = document.getElementById('drawingCanvas');
-const ctx = canvas.getContext('2d');
-
-// Tilpass canvas til skjermstørrelsen
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
+const svg = document.getElementById('drawingSvg');
 let isDrawing = false;
-let path = [];
+let pathData = [];
+let currentPath;
 
-// Event listeners for drawing
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mouseleave', stopDrawing);
-
-// Start drawing function
+// Start tegning
 function startDrawing(e) {
+    e.preventDefault();
     isDrawing = true;
-    path = [];
-    ctx.beginPath();
-    ctx.moveTo(e.clientX, e.clientY);
+    pathData = [];
+    
+    const { x, y } = getEventPosition(e);
+    pathData.push({ x, y });
+
+    currentPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    currentPath.setAttribute("fill", "none");
+    currentPath.setAttribute("stroke", "#275DEA");
+    currentPath.setAttribute("stroke-width", "3");
+    currentPath.setAttribute("stroke-linecap", "round");
+    currentPath.setAttribute("stroke-linejoin", "round");
+    svg.appendChild(currentPath);
 }
 
-// Draw function
+// Tegning pågår
 function draw(e) {
     if (!isDrawing) return;
-    ctx.lineTo(e.clientX, e.clientY);
-    ctx.strokeStyle = '#275DEA';
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-    path.push({ x: e.clientX, y: e.clientY });
+    e.preventDefault();
+
+    const { x, y } = getEventPosition(e);
+    pathData.push({ x, y });
+
+    const d = pathData.map((point, index) => {
+        return index === 0 
+            ? `M${point.x},${point.y}` 
+            : `L${point.x},${point.y}`;
+    }).join(" ");
+
+    currentPath.setAttribute("d", d);
 }
 
-// Stop drawing function
+// Stopper tegning
 function stopDrawing() {
+    if (!isDrawing) return;
     isDrawing = false;
-    ctx.closePath();
     checkSelection();
 }
 
-// Funksjon for å sjekke om et prosjekt er ringet rundt
+// Sjekker om prosjekt er ringet rundt
 function checkSelection() {
     const projects = document.querySelectorAll('.project');
     projects.forEach(project => {
         const rect = project.getBoundingClientRect();
-        const projectX = rect.left;
-        const projectY = rect.top;
-        const projectW = rect.width;
-        const projectH = rect.height;
-
-        const inside = path.some(p =>
-            p.x > projectX && p.x < projectX + projectW &&
-            p.y > projectY && p.y < projectY + projectH
+        const inside = pathData.some(p => 
+            p.x > rect.left && p.x < rect.right && 
+            p.y > rect.top && p.y < rect.bottom
         );
 
         if (inside) {
@@ -64,8 +64,49 @@ function checkSelection() {
     });
 }
 
-// Sørger for at canvas endrer størrelse med vinduet
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
+// Håndtering av touch og mouse events
+svg.addEventListener('mousedown', startDrawing);
+svg.addEventListener('mousemove', draw);
+svg.addEventListener('mouseup', stopDrawing);
+svg.addEventListener('mouseleave', stopDrawing);
+
+svg.addEventListener('touchstart', startDrawing);
+svg.addEventListener('touchmove', draw);
+svg.addEventListener('touchend', stopDrawing);
+
+// Funksjon for å hente riktig posisjon fra både mus og touch
+function getEventPosition(e) {
+    if (e.touches) {
+        return {
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        };
+    }
+    return {
+        x: e.clientX,
+        y: e.clientY
+    };
+}
+
+// Funksjon for å beregne alder basert på fødselsdato
+function calculateAge(birthYear, birthMonth, birthDay) {
+    const today = new Date();
+    const birthDate = new Date(birthYear, birthMonth - 1, birthDay); // Måned er 0-indeksert i JS
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    // Juster for om bursdagen har vært i år eller ikke
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const dayDifference = today.getDate() - birthDate.getDate();
+
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+        age--;
+    }
+
+    return age;
+}
+
+// Sett din fødselsdato (år, måned, dag)
+const myAge = calculateAge(1992, 11, 3); 
+
+// Oppdaterer HTML-elementet med ID 'age'
+document.getElementById('age').textContent = myAge;
